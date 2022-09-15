@@ -2,7 +2,7 @@
 
 # Call SV in all samples, parallelized by chr
 
-# parallel -a 02_infos/chr_list.txt -k -j 10 srun -c 1 --mem-per-cpu=10G -p medium --time=7-00:00 -J 01_call_{} -log/01_call_{}_%j.log /bin/sh 01_scripts/01_call.sh {} 
+# parallel -a 02_infos/chr_list.txt -k -j 10 srun -c 4 --mem=20G -p medium --time=7-00:00 -J 01_call_{} -log/01_call_{}_%j.log /bin/sh 01_scripts/01_call.sh {} &
 # srun -c 2 -p medium --time=7-00:00 -J 01_call_ssa01-23 -o log/01_call_ssa01-23_%j.log /bin/sh 01_scripts/01_call.sh 'ssa01-23' &
 
 # VARIABLES
@@ -20,20 +20,21 @@ CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
 
 BAM_LIST=$(for file in $(ls $BAM_DIR/*.bam); do echo '--bam' "$file" ; done)
 
+CPU=2
+
 # LOAD REQUIRED MODULES
 
+
+# Increase opened file number limit
+ulimit -S -n 2048
+
+# 0. Create output directory
 if [[ ! -d $CALLS_DIR/"$REGION" ]]
 then
   mkdir $CALLS_DIR/"$REGION"
 fi
 
-# increase number of opened files
-ulimit -S -n 2048
-
-
 # 1. Generate bed for given chromosome
-#less "$GENOME".fai | grep $REGION | cut -f1,3,4 > 02_infos/"$REGION".bed
-#echo $REGION > 02_infos/"$REGION".bed
 bgzip 02_infos/"$REGION".bed
 tabix -p bed 02_infos/"$REGION".bed.gz
 
@@ -45,4 +46,5 @@ $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegion
 $CALLS_DIR/"$REGION"/runWorkflow.py -j 2
 
 # 4. Rename output
-#05_calls/ssa01-23/results/variants/
+# $CALLS_DIR/"$REGION"/results/variants/
+## mv OUT $CALLS_DIR/"$REGION"
