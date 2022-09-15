@@ -23,7 +23,7 @@ BAM_LIST=$(for file in $(ls $BAM_DIR/*.bam); do echo '--bam' "$file" ; done)
 CPU=2
 
 # LOAD REQUIRED MODULES
-
+module load bcftools/1.15
 
 # Increase opened file number limit
 ulimit -S -n 2048
@@ -46,6 +46,5 @@ $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegion
 ## -j controls the number of cores/nodes
 $CALLS_DIR/"$REGION"/runWorkflow.py -j 2
 
-# 4. Rename output
-# $CALLS_DIR/"$REGION"/results/variants/
-## mv OUT $CALLS_DIR/"$REGION"
+# 4. Sort and rename output
+# bcftools sort $CALLS_DIR/"$REGION"/results/variants/ -Oz > $CALLS_DIR/"$REGION"/"$REGION"_sorted.vcf.gz
