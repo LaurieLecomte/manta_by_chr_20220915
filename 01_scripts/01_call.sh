@@ -35,7 +35,7 @@ then
 fi
 
 # 1. Generate bed for given chromosome
-less "$GENOME".fai | cut -f1,3,4 > 02_infos/"$REGION".bed
+less "$GENOME".fai | grep "$REGION" | cut -f1,3,4 > 02_infos/"$REGION".bed
 bgzip 02_infos/"$REGION".bed
 tabix -p bed 02_infos/"$REGION".bed.gz
 
