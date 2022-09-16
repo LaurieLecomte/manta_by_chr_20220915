@@ -18,8 +18,6 @@ CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
 
 BAM_LIST=$(for file in $(ls $BAM_DIR/*.bam); do echo '--bam' "$file" ; done)
 
-CPU=2
-
 VCF_LIST="$MERGED_DIR/VCF_list.txt"
 
 

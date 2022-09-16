@@ -32,12 +32,14 @@ ulimit -S -n 2048
 if [[ ! -d $CALLS_DIR/"$REGION" ]]
 then
   mkdir $CALLS_DIR/"$REGION"
+else
+  rm -r $CALLS_DIR/"$REGION"/*
 fi
 
 # 1. Generate bed for given chromosome
 less "$GENOME".fai | grep -Fw "$REGION" | cut -f1,3,4 > 02_infos/"$REGION".bed
-bgzip 02_infos/"$REGION".bed
-tabix -p bed 02_infos/"$REGION".bed.gz
+bgzip 02_infos/"$REGION".bed -f
+tabix -p bed 02_infos/"$REGION".bed.gz -f
 
 # 2. Workflow configuration : set reference genome and samples for which SV are to be called in order to generate an executable (runWorkflow.py)
 $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegions 02_infos/"$REGION".bed.gz $(echo $BAM_LIST)
@@ -47,4 +49,4 @@ $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegion
 $CALLS_DIR/"$REGION"/runWorkflow.py -j 2
 
 # 4. Sort and rename output
-# bcftools sort $CALLS_DIR/"$REGION"/results/variants/ -Oz > $CALLS_DIR/"$REGION"/"$REGION"_sorted.vcf.gz
+bcftools sort $CALLS_DIR/"$REGION"/results/variants/diploidSV.vcf.gz -Oz > $CALLS_DIR/"$REGION"/"$REGION"_sorted.vcf.gz
