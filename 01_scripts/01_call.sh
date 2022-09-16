@@ -14,16 +14,19 @@ MERGED_DIR="06_merged"
 FILT_DIR="07_filtered"
 
 REGION=$1
-
-MANTA_INST_DIR=$(conda info --envs | grep -Po 'manta\K.*' | sed 's: ::g' | sed 's/\*//')
-CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
-
 BAM_LIST=$(for file in $(ls $BAM_DIR/*.bam); do echo '--bam' "$file" ; done)
 
 CPU=2
 
+## Paths and exec locations for running manta
+MANTA_INST_DIR=$(conda info --envs | grep -Po 'manta\K.*' | sed 's: ::g' | sed 's/\*//')
+CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
+CONVERT_INV=$(find $MANTA_INST_DIR/bin -name 'convertInversion.py')
+SAMTOOLS_PATH=$(find $MANTA_INST_DIR -name 'samtools')
+
 # LOAD REQUIRED MODULES
 module load bcftools/1.15
+
 
 # Increase opened file number limit
 ulimit -S -n 2048
@@ -48,5 +51,8 @@ $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegion
 ## -j controls the number of cores/nodes
 $CALLS_DIR/"$REGION"/runWorkflow.py -j 2
 
-# 4. Sort and rename output
-bcftools sort $CALLS_DIR/"$REGION"/results/variants/diploidSV.vcf.gz -Oz > $CALLS_DIR/"$REGION"/"$REGION"_sorted.vcf.gz
+# 4. Convert BNDs to INVs
+$CONVERT_INV $SAMTOOLS_PATH $GENOME $CALLS_DIR/"$REGION"/results/variants/diploidSV.vcf.gz > $CALLS_DIR/"$REGION"/results/variants/diploidSV_converted.vcf
+
+# 5. Sort and rename output
+bcftools sort $CALLS_DIR/"$REGION"/results/variants/diploidSV_converted.vcf -Oz > $CALLS_DIR/"$REGION"/"$REGION"_sorted.vcf.gz

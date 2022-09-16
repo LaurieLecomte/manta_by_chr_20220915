@@ -12,13 +12,17 @@ MERGED_DIR="06_merged"
 FILT_DIR="07_filtered"
 
 REGION=$1
-
-MANTA_INST_DIR=$(conda info --envs | grep -Po 'manta\K.*' | sed 's: ::g' | sed 's/\*//')
-CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
-
 BAM_LIST=$(for file in $(ls $BAM_DIR/*.bam); do echo '--bam' "$file" ; done)
 
+CPU=2
+
 VCF_LIST="$MERGED_DIR/VCF_list.txt"
+
+## Paths and exec locations for running manta
+MANTA_INST_DIR=$(conda info --envs | grep -Po 'manta\K.*' | sed 's: ::g' | sed 's/\*//')
+CONFIG_FILE=$(find $MANTA_INST_DIR/bin -name 'configManta.py')
+CONVERT_INV=$(find $MANTA_INST_DIR/bin -name 'convertInversion.py')
+SAMTOOLS_PATH=$(find $MANTA_INST_DIR -name 'samtools')
 
 
 # LOAD REQUIRED MODULES
