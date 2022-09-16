@@ -39,5 +39,5 @@ do
   echo "$CALLS_DIR/"$CHR"/"$CHR"_sorted.vcf.gz" >> $VCF_LIST
 done
 
-# 1. Concat and sort
-bcftools concat -f $VCF_LIST | bcftools sort -Oz > $MERGED_DIR/merged_sorted.vcf.gz
+# 1. Concat, add tags and sort
+bcftools concat -f $VCF_LIST | bcftools +fill-tags | bcftools sort -Oz > $MERGED_DIR/merged_sorted.vcf.gz
