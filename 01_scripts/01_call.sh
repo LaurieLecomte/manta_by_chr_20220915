@@ -51,7 +51,7 @@ $CONFIG_FILE --referenceFasta $GENOME --runDir $CALLS_DIR/"$REGION" --callRegion
 ## -j controls the number of cores/nodes
 $CALLS_DIR/"$REGION"/runWorkflow.py -j 2
 
-# 4. Convert BNDs to INVs
+# 4. Convert BNDs to INVs : the convertInversion.py script changes BNDs to INVs and adds a SVLEN field to these SVs
 $CONVERT_INV $SAMTOOLS_PATH $GENOME $CALLS_DIR/"$REGION"/results/variants/diploidSV.vcf.gz > $CALLS_DIR/"$REGION"/results/variants/diploidSV_converted.vcf
 
 # 5. Sort and rename output
