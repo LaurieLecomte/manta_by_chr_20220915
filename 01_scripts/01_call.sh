@@ -39,6 +39,7 @@ else
   rm -r $CALLS_DIR/"$REGION"/*
 fi
 
+
 # 1. Generate bed for given chromosome
 less "$GENOME".fai | grep -Fw "$REGION" | cut -f1,3,4 > 02_infos/"$REGION".bed
 bgzip 02_infos/"$REGION".bed -f

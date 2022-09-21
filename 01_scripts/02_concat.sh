@@ -40,4 +40,4 @@ do
 done
 
 # 1. Concat, add tags and sort
-bcftools concat -f $VCF_LIST | bcftools +fill-tags | bcftools sort -Oz > $MERGED_DIR/merged_sorted.vcf.gz
+bcftools concat -f $VCF_LIST | bcftools +fill-tags | bcftools sort -Oz > $MERGED_DIR/manta_merged_sorted.vcf.gz

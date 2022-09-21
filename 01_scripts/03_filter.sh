@@ -18,7 +18,7 @@ CPU=2
 
 VCF_LIST="$MERGED_DIR/VCF_list.txt"
 
-MERGED_VCF="$MERGED_DIR/merged_sorted.vcf.gz"
+MERGED_VCF="$MERGED_DIR/manta_merged_sorted.vcf.gz"
 
 ## Paths and exec locations for running manta
 MANTA_INST_DIR=$(conda info --envs | grep -Po 'manta\K.*' | sed 's: ::g' | sed 's/\*//')
