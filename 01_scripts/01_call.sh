@@ -40,8 +40,8 @@ else
 fi
 
 
-# 1. Generate bed for given chromosome
-less "$GENOME".fai | grep -Fw "$REGION" | cut -f1,3,4 > 02_infos/"$REGION".bed
+# 1. Create bed from genome index for given chromosome
+less "$GENOME".fai | awk 'BEGIN {FS="\t"}; {print $1 FS "0" FS $2}' | grep -Fw "$REGION" > 02_infos/"$REGION".bed
 bgzip 02_infos/"$REGION".bed -f
 tabix -p bed 02_infos/"$REGION".bed.gz -f
 
