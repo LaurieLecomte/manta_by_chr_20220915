@@ -25,3 +25,7 @@ This pipeline parallelizes the SV calling step across **chromosomes** in order t
 
 ## Notes about [FILTERS] (https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#vcf-filter-fields)
  * SampleFT : "No sample passes all the sample-level filters. [...] if none of the samples passes all sample-level filters, the 'SampleFT' filter will be applied at the record level.". In this case, almost all samples are hom ref (GT = 0/0 and HomRef sample filter tag) and almost none are tagged as PASS.
+
+
+### Conda environment
+Create a new conda env named `manta_2022` using `conda create --name manta_2022 --file manta_env.txt` (from the main directory) and load this env prior to running the pipeline : `conda activate manta_2022`
